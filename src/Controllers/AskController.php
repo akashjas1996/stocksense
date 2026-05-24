@@ -59,7 +59,7 @@ class AskController {
             'generationConfig' => ['temperature' => 0.7, 'maxOutputTokens' => 1024],
         ]);
 
-        $url  = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' . GEMINI_API_KEY;
+        $url  = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' . GEMINI_API_KEY;
         $resp = $this->curlPost($url, $body);
         if ($resp === false) {
             echo json_encode(['error' => 'Could not reach the AI service. Ensure the server can make outbound HTTPS requests (cURL).']); return;
