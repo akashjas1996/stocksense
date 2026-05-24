@@ -28,6 +28,8 @@
 /* ── Base ────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
+html { overflow-x: hidden; width: 100%; }
+
 body {
   font-family: 'Nunito', system-ui, sans-serif;
   background: var(--bg);
@@ -78,7 +80,7 @@ a { color: var(--accent); }
 .bottom-nav a.active { background: rgba(217,119,6,.18); color: var(--accent); }
 
 /* ── Main content ────────────────────────────────── */
-.page { max-width: 600px; margin: 0 auto; padding: 16px 16px 4px; }
+.page { max-width: 600px; margin: 0 auto; padding: 16px 16px 4px; min-width: 0; }
 
 /* ── Cards ───────────────────────────────────────── */
 .card {
@@ -400,7 +402,7 @@ mark { background: #FEF9C3; border-radius: 3px; padding: 0 2px; }
     color: var(--text-2); text-decoration: none; flex-shrink: 0;
     font-size: .9rem;
 }
-.mall-aisle { margin-bottom: 14px; }
+.mall-aisle { margin-bottom: 14px; min-width: 0; }
 .mall-aisle-label {
     display: flex; align-items: center; gap: 6px;
     font-size: .75rem; font-weight: 700; color: var(--text-2);
@@ -409,7 +411,11 @@ mark { background: #FEF9C3; border-radius: 3px; padding: 0 2px; }
 }
 .mall-shelf {
     display: flex; gap: 10px;
-    overflow-x: auto; padding-bottom: 8px;
+    overflow-x: auto; overflow-y: visible;
+    padding-bottom: 8px;
+    /* negative margin trick: shelf bleeds to screen edge, padding keeps cards inset */
+    margin-left: -16px; margin-right: -16px;
+    padding-left: 16px; padding-right: 16px;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
 }
