@@ -38,6 +38,7 @@ $routes = [
         '/history'                => 'HistoryController@index',
         '/history/item/(\d+)'     => 'HistoryController@item',
         '/search'                 => 'SearchController@index',
+        '/explore'                => 'ExploreController@index',
     ],
     'POST' => [
         '/auth/login'             => 'AuthController@login',

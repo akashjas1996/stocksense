@@ -49,8 +49,8 @@
     <a href="<?= APP_URL ?>/"        class="<?= $cur === parse_url(APP_URL.'/', PHP_URL_PATH) ? 'active' : '' ?>">
         <i class="bi bi-grid-3x3-gap-fill"></i>Home
     </a>
-    <a href="<?= APP_URL ?>/rooms"   class="<?= str_contains($cur, '/rooms') ? 'active' : '' ?>">
-        <i class="bi bi-door-open-fill"></i>Rooms
+    <a href="<?= APP_URL ?>/explore" class="<?= str_contains($cur, '/explore') ? 'active' : '' ?>">
+        <i class="bi bi-shop"></i>Explore
     </a>
     <a href="<?= APP_URL ?>/scan"    class="<?= str_contains($cur, '/scan') ? 'active' : '' ?>">
         <i class="bi bi-upc-scan"></i>Scan

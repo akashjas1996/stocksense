@@ -370,3 +370,102 @@ mark { background: #FEF9C3; border-radius: 3px; padding: 0 2px; }
 .empty-state { text-align: center; padding: 40px 16px; color: var(--text-3); }
 .empty-state i { font-size: 3rem; display: block; margin-bottom: 12px; }
 .empty-state p { font-size: .875rem; font-weight: 600; margin: 0; }
+
+/* ── Explore / Mall ──────────────────────────────── */
+.mall-banner {
+    display: flex; align-items: center; justify-content: space-between;
+    background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
+    border: 1.5px solid #FCD34D;
+    border-radius: var(--r); padding: 18px 20px; margin-bottom: 20px;
+}
+.mall-dept {
+    margin-bottom: 24px;
+}
+.mall-dept-head {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 0 12px; border-bottom: 2px solid var(--border);
+    margin-bottom: 12px;
+}
+.mall-dept-icon {
+    width: 44px; height: 44px; border-radius: 14px;
+    background: var(--accent-l); display: flex; align-items: center;
+    justify-content: center; font-size: 1.4rem; flex-shrink: 0;
+}
+.mall-dept-name { font-size: 1.05rem; font-weight: 900; color: var(--text); }
+.mall-dept-meta { font-size: .75rem; color: var(--text-3); font-weight: 600; margin-top: 1px; }
+.mall-dept-link {
+    margin-left: auto; width: 34px; height: 34px; border-radius: 10px;
+    background: var(--bg); border: 1.5px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-2); text-decoration: none; flex-shrink: 0;
+    font-size: .9rem;
+}
+.mall-aisle { margin-bottom: 14px; }
+.mall-aisle-label {
+    display: flex; align-items: center; gap: 6px;
+    font-size: .75rem; font-weight: 700; color: var(--text-2);
+    text-transform: uppercase; letter-spacing: .05em;
+    margin-bottom: 8px;
+}
+.mall-shelf {
+    display: flex; gap: 10px;
+    overflow-x: auto; padding-bottom: 8px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+}
+.mall-shelf::-webkit-scrollbar { display: none; }
+.mall-card {
+    flex-shrink: 0; width: 120px;
+    background: var(--card); border: 1.5px solid var(--border-s);
+    border-radius: var(--r); padding: 12px 10px 10px;
+    display: flex; flex-direction: column; align-items: center;
+    text-decoration: none; color: var(--text);
+    transition: box-shadow .15s, transform .15s;
+    position: relative;
+}
+.mall-card:hover  { box-shadow: var(--shadow-l); transform: translateY(-2px); }
+.mall-card.dead   { border-color: var(--danger); background: var(--danger-l); }
+.mall-card.soon   { border-color: #FCD34D; }
+.mall-card-img {
+    width: 52px; height: 52px; border-radius: 12px;
+    background: var(--accent-l); display: flex; align-items: center;
+    justify-content: center; font-size: 1.7rem; margin-bottom: 8px;
+    overflow: hidden; flex-shrink: 0;
+}
+.mall-card-img img { width: 100%; height: 100%; object-fit: cover; }
+.mall-card-name {
+    font-size: .78rem; font-weight: 800; color: var(--text);
+    text-align: center; width: 100%;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.mall-card-sub {
+    font-size: .65rem; color: var(--text-3); text-align: center;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%;
+    margin-top: 1px;
+}
+.mall-card-qty {
+    font-size: .82rem; font-weight: 900; color: var(--accent);
+    margin-top: 6px; text-align: center;
+}
+.mall-fill-wrap {
+    width: 100%; height: 4px; background: var(--border);
+    border-radius: 2px; margin-top: 6px; overflow: hidden;
+}
+.mall-fill-bar { height: 100%; border-radius: 2px; transition: width .3s; }
+.mall-card-tag {
+    position: absolute; top: 7px; right: 7px;
+    font-size: .6rem; font-weight: 800; padding: 2px 5px;
+    border-radius: 6px; text-transform: uppercase; letter-spacing: .03em;
+}
+.mall-card-tag.expired { background: var(--danger-l); color: var(--danger); }
+.mall-card-tag.soon    { background: var(--warn-l);   color: var(--accent-d); }
+.mall-card-add {
+    flex-shrink: 0; width: 120px;
+    background: none; border: 1.5px dashed var(--border);
+    border-radius: var(--r); padding: 12px 10px;
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center; gap: 6px;
+    text-decoration: none; color: var(--text-3);
+    font-size: .75rem; font-weight: 700;
+    min-height: 120px;
+}
