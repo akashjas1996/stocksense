@@ -27,6 +27,7 @@
 
 /* ── Base ────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+a, button, [role="button"] { touch-action: manipulation; }
 
 html { overflow-x: hidden; width: 100%; }
 
