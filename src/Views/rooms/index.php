@@ -1,32 +1,24 @@
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <h5 class="fw-bold mb-0">Rooms</h5>
-    <a href="<?= APP_URL ?>/rooms/create" class="btn btn-dark btn-sm">
-        <i class="bi bi-plus"></i> Add Room
+<div class="page-head">
+    <h1>Rooms</h1>
+    <?php if (isLoggedIn()): ?>
+    <a href="<?= APP_URL ?>/rooms/create" class="btn-accent" style="padding:9px 16px;text-decoration:none;font-size:.85rem;">
+        <i class="bi bi-plus"></i> Add
     </a>
+    <?php endif ?>
 </div>
 
 <?php if (empty($rooms)): ?>
-<div class="text-center py-5 text-muted">
-    <i class="bi bi-door-open display-4"></i>
-    <p class="mt-2">No rooms yet.</p>
-</div>
+<div class="empty-state"><i class="bi bi-door-open"></i><p>No rooms yet.</p></div>
 <?php else: ?>
-<div class="d-flex flex-column gap-2">
+<div style="display:flex;flex-direction:column;gap:10px;">
     <?php foreach ($rooms as $room): ?>
-    <a href="<?= APP_URL ?>/rooms/<?= $room['id'] ?>" class="text-decoration-none">
-        <div class="card location-card">
-            <div class="card-body d-flex align-items-center">
-                <i class="bi bi-door-open-fill fs-3 text-secondary me-3"></i>
-                <div class="flex-grow-1">
-                    <div class="fw-semibold"><?= e($room['name']) ?></div>
-                    <div class="text-muted small">
-                        <?= $room['container_count'] ?> containers &middot;
-                        <?= formatWeight($room['total_grams']) ?> total
-                    </div>
-                </div>
-                <i class="bi bi-chevron-right text-muted"></i>
-            </div>
+    <a href="<?= APP_URL ?>/rooms/<?= $room['id'] ?>" class="loc-card" style="text-decoration:none;">
+        <div class="loc-icon"><?= roomEmoji($room['name']) ?></div>
+        <div class="loc-info">
+            <div class="loc-name"><?= e($room['name']) ?></div>
+            <div class="loc-meta"><?= $room['container_count'] ?> containers &middot; <?= formatWeight($room['total_grams']) ?> total</div>
         </div>
+        <i class="bi bi-chevron-right" style="color:var(--text-3);font-size:.85rem;"></i>
     </a>
     <?php endforeach ?>
 </div>

@@ -1,25 +1,27 @@
-<h5 class="fw-bold mb-3">Scan</h5>
-
-<div class="card shadow-sm mb-3">
-    <div class="card-body p-3">
-        <p class="text-muted small mb-2">
-            Point camera at a <strong>room or container QR</strong> to view its contents,
-            or at a <strong>product barcode</strong> to add an item.
-        </p>
-        <div id="qr-reader" style="width:100%"></div>
-        <div id="scan-result" class="mt-2 text-center text-muted small"></div>
-    </div>
+<div class="page-head">
+    <h1>Scan</h1>
 </div>
 
-<div class="d-flex gap-2">
-    <button id="btn-location" class="btn btn-dark flex-fill active-mode" onclick="setMode('location')">
+<div style="font-size:.85rem;color:var(--text-2);margin-bottom:14px;text-align:center;">
+    Point at a <strong>room/container QR</strong> to view contents, or a <strong>product barcode</strong> to add an item.
+</div>
+
+<div class="card" style="overflow:hidden;margin-bottom:14px;padding:0;">
+    <div id="qr-reader" style="width:100%;"></div>
+    <div id="scan-result" style="padding:12px 16px;text-align:center;font-size:.85rem;color:var(--text-2);min-height:40px;"></div>
+</div>
+
+<div style="display:flex;gap:8px;">
+    <button id="btn-location" class="btn-accent" style="flex:1;" onclick="setMode('location')">
         <i class="bi bi-qr-code"></i> Location
     </button>
-    <button id="btn-product" class="btn btn-outline-dark flex-fill" onclick="setMode('product')">
+    <button id="btn-product" class="btn-outline" style="flex:1;" onclick="setMode('product')">
         <i class="bi bi-upc-scan"></i> Product
     </button>
 </div>
-<p class="text-muted small text-center mt-2" id="mode-hint">Scanning for room / container QR code</p>
+<div id="mode-hint" style="text-align:center;font-size:.8rem;color:var(--text-3);margin-top:8px;font-weight:600;">
+    Scanning for room / container QR code
+</div>
 
 <script>
 let scanner = null;
@@ -27,11 +29,12 @@ let currentMode = 'location';
 
 function setMode(mode) {
     currentMode = mode;
-    document.getElementById('btn-location').className = mode === 'location'
-        ? 'btn btn-dark flex-fill' : 'btn btn-outline-dark flex-fill';
-    document.getElementById('btn-product').className = mode === 'product'
-        ? 'btn btn-dark flex-fill' : 'btn btn-outline-dark flex-fill';
-    document.getElementById('mode-hint').textContent = mode === 'location'
+    const isLoc = mode === 'location';
+    document.getElementById('btn-location').className = isLoc ? 'btn-accent' : 'btn-outline';
+    document.getElementById('btn-location').style.flex = '1';
+    document.getElementById('btn-product').className = isLoc ? 'btn-outline' : 'btn-accent';
+    document.getElementById('btn-product').style.flex = '1';
+    document.getElementById('mode-hint').textContent = isLoc
         ? 'Scanning for room / container QR code'
         : 'Scanning product barcode to add item';
     document.getElementById('scan-result').textContent = '';
@@ -39,7 +42,6 @@ function setMode(mode) {
 
 function onScan(code) {
     if (currentMode === 'location') {
-        // Navigate directly — server handles QR lookup
         window.location.href = `<?= APP_URL ?>/scan/location?qr=${encodeURIComponent(code)}`;
     } else {
         document.getElementById('scan-result').textContent = 'Looking up…';
@@ -48,7 +50,7 @@ function onScan(code) {
             .then(data => {
                 const name = data.name || code;
                 document.getElementById('scan-result').innerHTML =
-                    `Found: <strong>${name}</strong>. <a href="<?= APP_URL ?>/inventory/create?barcode=${encodeURIComponent(code)}&item_name=${encodeURIComponent(name)}">Add to inventory →</a>`;
+                    `Found: <strong>${name}</strong>. <a href="<?= APP_URL ?>/inventory/create?barcode=${encodeURIComponent(code)}&item_name=${encodeURIComponent(name)}" style="color:var(--accent);font-weight:700;">Add to inventory →</a>`;
             });
     }
 }
@@ -59,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { facingMode: 'environment' },
         { fps: 10, qrbox: { width: 280, height: 200 } },
         (code) => onScan(code)
-    ).catch(err => {
+    ).catch(() => {
         document.getElementById('scan-result').textContent = 'Camera access denied or unavailable.';
     });
 });

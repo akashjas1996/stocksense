@@ -1,28 +1,27 @@
-<div class="text-center mb-4">
-    <h2 class="fw-bold">Create Account</h2>
-    <p class="text-muted">Join your family's inventory.</p>
-</div>
+<div class="auth-wrap">
+    <div class="auth-card">
+        <div class="auth-logo">🏠</div>
+        <div class="auth-title">Create account</div>
+        <div class="auth-sub">Join your family's inventory.</div>
 
-<div class="card shadow-sm">
-    <div class="card-body p-4">
         <form method="POST" action="<?= APP_URL ?>/auth/register">
-            <div class="mb-3">
-                <label class="form-label">Your Name</label>
-                <input type="text" name="name" class="form-control form-control-lg" required autofocus>
+            <div class="form-group">
+                <label>Your name</label>
+                <input type="text" name="name" class="form-control" required autofocus placeholder="Akaash">
             </div>
-            <div class="mb-3">
-                <label class="form-label">Email</label>
-                <input type="email" name="email" class="form-control form-control-lg" required>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" name="email" class="form-control" required placeholder="you@example.com">
             </div>
-            <div class="mb-4">
-                <label class="form-label">Password <span class="text-muted small">(min 6 chars)</span></label>
-                <input type="password" name="password" class="form-control form-control-lg" minlength="6" required>
+            <div class="form-group" style="margin-bottom:24px;">
+                <label>Password <span style="font-weight:500;text-transform:none">(min 6 chars)</span></label>
+                <input type="password" name="password" class="form-control" minlength="6" required placeholder="••••••••">
             </div>
-            <button class="btn btn-dark btn-lg w-100">Create Account</button>
+            <button type="submit" class="btn-accent">Create account</button>
         </form>
+
+        <div style="text-align:center;margin-top:16px;font-size:.85rem;color:var(--text-3);">
+            Already have an account? <a href="<?= APP_URL ?>/auth/login" style="color:var(--accent);font-weight:700">Sign in</a>
+        </div>
     </div>
 </div>
-
-<p class="text-center mt-3 text-muted">
-    Already have an account? <a href="<?= APP_URL ?>/auth/login">Sign in</a>
-</p>

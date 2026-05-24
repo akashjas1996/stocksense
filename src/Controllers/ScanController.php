@@ -38,7 +38,8 @@ class ScanController {
         $stmt->execute([$barcode]);
         $item = $stmt->fetch();
         if ($item) {
-            echo json_encode(['source' => 'local', 'name' => $item['name'], 'barcode' => $barcode]);
+            echo json_encode(['source' => 'local', 'name' => $item['name'],
+                              'image_url' => $item['image_url'], 'barcode' => $barcode]);
             exit;
         }
 
@@ -48,14 +49,26 @@ class ScanController {
         if ($response) {
             $data = json_decode($response, true);
             if (($data['status'] ?? 0) === 1) {
-                $name = $data['product']['product_name'] ?? $data['product']['product_name_en'] ?? '';
+                $p         = $data['product'];
+                $name      = $p['product_name'] ?? $p['product_name_en'] ?? '';
+                $imageUrl  = $p['image_front_url'] ?? $p['image_url'] ?? '';
                 if ($name) {
-                    echo json_encode(['source' => 'openfoodfacts', 'name' => $name, 'barcode' => $barcode]);
+                    // Persist image_url to item if it exists in DB
+                    if ($imageUrl) {
+                        $ex = db()->prepare('SELECT id FROM items WHERE product_barcode = ?');
+                        $ex->execute([$barcode]);
+                        if ($ex->fetch()) {
+                            db()->prepare('UPDATE items SET image_url = ? WHERE product_barcode = ?')
+                                ->execute([$imageUrl, $barcode]);
+                        }
+                    }
+                    echo json_encode(['source' => 'openfoodfacts', 'name' => $name,
+                                      'image_url' => $imageUrl, 'barcode' => $barcode]);
                     exit;
                 }
             }
         }
 
-        echo json_encode(['source' => 'unknown', 'name' => '', 'barcode' => $barcode]);
+        echo json_encode(['source' => 'unknown', 'name' => '', 'image_url' => '', 'barcode' => $barcode]);
     }
 }

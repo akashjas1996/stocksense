@@ -71,6 +71,40 @@ function currentUser(): ?array {
     return $user;
 }
 
+function itemEmoji(string $name, string $nameEn = ''): string {
+    $s = strtolower($name . ' ' . $nameEn);
+    if (preg_match('/\b(dal|lentil|chana|matar|gram|urad|moong|arhar|toor|rehar|chane)\b/', $s)) return '🫘';
+    if (preg_match('/\b(oil|tel|ghee)\b/', $s)) return '🫙';
+    if (preg_match('/\b(aata|atta|maida|flour|suji|semolina|besan|sattu|rava)\b/', $s)) return '🌾';
+    if (preg_match('/\b(chawal|rice|poha|chowmin|noodle)\b/', $s)) return '🍚';
+    if (preg_match('/\b(sugar|cheeni|jaggery|gud|gur|shakkar)\b/', $s)) return '🍯';
+    if (preg_match('/\b(kaju|cashew|badam|almond|kismish|raisin|peanut|moongphali|magaj|seed)\b/', $s)) return '🥜';
+    if (preg_match('/\b(pepper|mirch|chilli|elaich|cardamom|dalchini|cinnamon|laung|clove|jeera|cumin|dhaniya|coriander|ajwain|sauf|fennel|tej|bay|javitri|mace|nutmeg|jaiphal|mustard|sarson)\b/', $s)) return '🌿';
+    if (preg_match('/\b(mixture|namkeen|snack|chana|roasted)\b/', $s)) return '🥨';
+    return '📦';
+}
+
+function containerIcon(string $type): string {
+    return match($type) {
+        'fridge'  => '❄️',
+        'freezer' => '🧊',
+        'shelf'   => '🗂',
+        'cabinet' => '🚪',
+        'drawer'  => '🗃',
+        'basket'  => '🧺',
+        default   => '📦',
+    };
+}
+
+function roomEmoji(string $name): string {
+    $s = strtolower($name);
+    if (str_contains($s, 'kitchen'))  return '🍳';
+    if (str_contains($s, 'pantry'))   return '🥫';
+    if (str_contains($s, 'store') || str_contains($s, 'storage')) return '📦';
+    if (str_contains($s, 'bedroom') || str_contains($s, 'room'))  return '🚪';
+    return '🏠';
+}
+
 function flash(string $key, string $message = ''): string {
     if ($message !== '') {
         $_SESSION['flash'][$key] = $message;

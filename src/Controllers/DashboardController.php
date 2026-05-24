@@ -44,6 +44,14 @@ class DashboardController {
             LIMIT 5
         ')->fetchAll();
 
+        $hour     = (int) date('H');
+        $greeting = $hour < 12 ? 'Good morning' : ($hour < 17 ? 'Good afternoon' : 'Good evening');
+        $greetEmoji = $hour < 12 ? '☀️' : ($hour < 17 ? '🌤️' : '🌙');
+
+        $totalItems   = db()->query('SELECT COUNT(*) FROM inventory')->fetchColumn();
+        $expiredCount = db()->query("SELECT COUNT(*) FROM inventory WHERE expiry_date < CURDATE()")->fetchColumn();
+        $soonCount    = db()->query("SELECT COUNT(*) FROM inventory WHERE expiry_date BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 7 DAY)")->fetchColumn();
+
         $pageTitle = 'Dashboard';
         ob_start();
         require __DIR__ . '/../Views/dashboard.php';

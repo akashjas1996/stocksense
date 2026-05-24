@@ -1,79 +1,91 @@
-<div class="d-flex align-items-center mb-3 gap-2">
-    <a href="<?= APP_URL ?>/rooms" class="btn btn-sm btn-outline-secondary">
-        <i class="bi bi-arrow-left"></i>
-    </a>
-    <h5 class="fw-bold mb-0 flex-grow-1"><?= e($room['name']) ?></h5>
-    <a href="<?= APP_URL ?>/rooms/<?= $room['id'] ?>/qr" class="btn btn-sm btn-outline-dark">
-        <i class="bi bi-qr-code"></i>
-    </a>
-    <a href="<?= APP_URL ?>/rooms/<?= $room['id'] ?>/edit" class="btn btn-sm btn-outline-secondary">
-        <i class="bi bi-pencil"></i>
-    </a>
+<?php
+$hasIssues = false;
+foreach (array_merge($looseItems, ...(array_map(fn($c) => [], $containers))) as $inv) {
+    if (expiryStatus($inv['expiry_date'] ?? null)) { $hasIssues = true; break; }
+}
+?>
+<div class="page-head">
+    <a href="<?= APP_URL ?>/rooms" class="back-btn"><i class="bi bi-arrow-left"></i></a>
+    <h1><?= e($room['name']) ?></h1>
+    <a href="<?= APP_URL ?>/rooms/<?= $room['id'] ?>/qr"   class="icon-btn" title="QR Code"><i class="bi bi-qr-code"></i></a>
+    <a href="<?= APP_URL ?>/rooms/<?= $room['id'] ?>/edit" class="icon-btn" title="Edit"><i class="bi bi-pencil"></i></a>
 </div>
 
 <!-- Containers -->
-<div class="d-flex justify-content-between align-items-center mb-2">
-    <h6 class="text-muted mb-0">Containers</h6>
-    <a href="<?= APP_URL ?>/containers/create?room_id=<?= $room['id'] ?>" class="btn btn-sm btn-outline-dark">
+<div class="sec-head">
+    <span class="sec-label">Containers (<?= count($containers) ?>)</span>
+    <a href="<?= APP_URL ?>/containers/create?room_id=<?= $room['id'] ?>" class="btn-outline" style="padding:6px 12px;font-size:.78rem;">
         <i class="bi bi-plus"></i> Add
     </a>
 </div>
 
 <?php if (empty($containers)): ?>
-<p class="text-muted small mb-3">No containers in this room.</p>
+<div class="empty-state" style="padding:24px 0;">
+    <i class="bi bi-box-seam" style="font-size:2rem;"></i>
+    <p>No containers yet.</p>
+</div>
 <?php else: ?>
-<div class="d-flex flex-column gap-2 mb-4">
-    <?php foreach ($containers as $c): ?>
-    <a href="<?= APP_URL ?>/containers/<?= $c['id'] ?>" class="text-decoration-none">
-        <div class="card location-card">
-            <div class="card-body d-flex align-items-center py-2">
-                <i class="bi bi-box-seam fs-4 text-secondary me-3"></i>
-                <div class="flex-grow-1">
-                    <div class="fw-semibold"><?= e($c['name']) ?>
-                        <span class="badge bg-secondary ms-1 small"><?= e($c['type']) ?></span>
-                    </div>
-                    <div class="text-muted small">
-                        <?= $c['item_count'] ?> items &middot; <?= formatWeight($c['total_grams']) ?>
-                    </div>
-                </div>
-                <i class="bi bi-chevron-right text-muted"></i>
+<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px;">
+    <?php foreach ($containers as $c):
+        $statusColor = '';
+        // We'll do a quick expiry check via the DB query's total — skip for now, just show stats
+    ?>
+    <a href="<?= APP_URL ?>/containers/<?= $c['id'] ?>" class="loc-card">
+        <div class="loc-icon" style="font-size:1.6rem"><?= containerIcon($c['type']) ?></div>
+        <div class="loc-info">
+            <div class="loc-name"><?= e($c['name']) ?></div>
+            <div class="loc-meta">
+                <span style="text-transform:capitalize"><?= e($c['type']) ?></span>
+                &middot; <?= $c['item_count'] ?> items
+                &middot; <?= formatWeight((int)$c['total_grams']) ?>
             </div>
         </div>
+        <i class="bi bi-chevron-right loc-chevron"></i>
     </a>
     <?php endforeach ?>
 </div>
 <?php endif ?>
 
-<!-- Loose items (no container) -->
-<div class="d-flex justify-content-between align-items-center mb-2">
-    <h6 class="text-muted mb-0">Items in room <span class="small">(no container)</span></h6>
-    <a href="<?= APP_URL ?>/inventory/create?room_id=<?= $room['id'] ?>" class="btn btn-sm btn-outline-dark">
+<!-- Loose items -->
+<div class="sec-head">
+    <span class="sec-label">Loose items (<?= count($looseItems) ?>)</span>
+    <a href="<?= APP_URL ?>/inventory/create?room_id=<?= $room['id'] ?>" class="btn-outline" style="padding:6px 12px;font-size:.78rem;">
         <i class="bi bi-plus"></i> Add
     </a>
 </div>
 
 <?php if (empty($looseItems)): ?>
-<p class="text-muted small">No loose items.</p>
+<div class="empty-state" style="padding:20px 0;">
+    <p style="color:var(--text-3);font-size:.85rem;font-weight:600;">No loose items in this room.</p>
+</div>
 <?php else: ?>
-<div class="d-flex flex-column gap-2">
-    <?php foreach ($looseItems as $inv): ?>
-    <?php $status = expiryStatus($inv['expiry_date']); ?>
-    <div class="item-pill d-flex align-items-center gap-2">
-        <div class="flex-grow-1">
-            <div class="fw-semibold"><?= e($inv['item_name']) ?></div>
-            <div class="text-muted small">
-                <?= formatWeight($inv['quantity_grams']) ?>
-                <?php if ($inv['expiry_date']): ?>
-                &middot; <span class="badge badge-<?= $status ?: 'ok' ?>">exp: <?= e($inv['expiry_date']) ?></span>
-                <?php endif ?>
+<div style="display:flex;flex-direction:column;gap:8px;">
+    <?php foreach ($looseItems as $inv):
+        $status = expiryStatus($inv['expiry_date']);
+        $isLow  = $inv['quantity_grams'] < 500;
+        $item   = db()->prepare('SELECT name_en, image_url FROM items WHERE id = ?');
+        $item->execute([$inv['item_id']]); $item = $item->fetch();
+    ?>
+    <div class="item-card <?= $status === 'expired' ? 'dead' : ($isLow ? 'low' : '') ?>">
+        <div class="item-thumb">
+            <?php if (!empty($item['image_url'])): ?>
+            <img src="<?= e($item['image_url']) ?>" alt="">
+            <?php else: ?>
+            <?= itemEmoji($inv['item_name'], $item['name_en'] ?? '') ?>
+            <?php endif ?>
+        </div>
+        <div class="item-info">
+            <div class="item-name"><?= e($inv['item_name']) ?></div>
+            <div style="display:flex;gap:4px;align-items:center;flex-wrap:wrap;margin-top:4px;">
+                <span class="qty-pill <?= $isLow ? 'low' : '' ?>"><?= formatWeight($inv['quantity_grams']) ?></span>
+                <?php if ($status): ?><span class="tag <?= $status === 'expired' ? 'expired' : 'soon' ?>"><?= $status === 'expired' ? 'Expired' : 'Exp ' . e($inv['expiry_date']) ?></span><?php endif ?>
+                <?php if ($inv['notes']): ?><span style="font-size:.72rem;color:var(--text-3)"><?= e($inv['notes']) ?></span><?php endif ?>
             </div>
         </div>
-        <a href="<?= APP_URL ?>/inventory/<?= $inv['id'] ?>/consume" class="btn btn-sm btn-outline-success">
-            <i class="bi bi-dash-circle"></i> Use
-        </a>
-        <a href="<?= APP_URL ?>/inventory/<?= $inv['id'] ?>/edit" class="btn btn-sm btn-outline-secondary">
-            <i class="bi bi-pencil"></i>
-        </a>
+        <div class="item-actions">
+            <a href="<?= APP_URL ?>/inventory/<?= $inv['id'] ?>/consume" class="icon-btn" title="Use"><i class="bi bi-dash-circle"></i></a>
+            <a href="<?= APP_URL ?>/inventory/<?= $inv['id'] ?>/edit"    class="icon-btn" title="Edit"><i class="bi bi-pencil"></i></a>
+        </div>
     </div>
     <?php endforeach ?>
 </div>

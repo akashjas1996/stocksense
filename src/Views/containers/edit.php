@@ -1,40 +1,45 @@
-<div class="d-flex align-items-center mb-3 gap-2">
-    <a href="<?= APP_URL ?>/containers/<?= $container['id'] ?>" class="btn btn-sm btn-outline-secondary"><i class="bi bi-arrow-left"></i></a>
-    <h5 class="fw-bold mb-0">Edit Container</h5>
+<div class="page-head">
+    <a href="<?= APP_URL ?>/containers/<?= $container['id'] ?>" class="back-btn"><i class="bi bi-arrow-left"></i></a>
+    <h1>Edit Container</h1>
 </div>
 
-<div class="card shadow-sm">
-    <div class="card-body p-4">
-        <form method="POST" action="<?= APP_URL ?>/containers/<?= $container['id'] ?>/update">
-            <div class="mb-3">
-                <label class="form-label">Room</label>
-                <select name="room_id" class="form-select form-select-lg" required>
-                    <?php foreach ($rooms as $r): ?>
-                    <option value="<?= $r['id'] ?>" <?= $r['id'] == $container['room_id'] ? 'selected' : '' ?>>
-                        <?= e($r['name']) ?>
-                    </option>
-                    <?php endforeach ?>
-                </select>
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Name</label>
-                <input type="text" name="name" class="form-control form-control-lg"
-                       value="<?= e($container['name']) ?>" required>
-            </div>
-            <div class="mb-4">
-                <label class="form-label">Type</label>
-                <select name="type" class="form-select form-select-lg">
-                    <?php foreach (['fridge','freezer','shelf','cabinet','drawer','basket','other'] as $t): ?>
-                    <option value="<?= $t ?>" <?= $container['type'] === $t ? 'selected' : '' ?>><?= ucfirst($t) ?></option>
-                    <?php endforeach ?>
-                </select>
-            </div>
-            <button class="btn btn-dark btn-lg w-100">Save</button>
-        </form>
-    </div>
+<div class="card" style="padding:20px;margin-bottom:12px;">
+    <form method="POST" action="<?= APP_URL ?>/containers/<?= $container['id'] ?>/update">
+        <div class="form-group">
+            <label>Room</label>
+            <select name="room_id" class="form-control" required>
+                <?php foreach ($rooms as $r): ?>
+                <option value="<?= $r['id'] ?>" <?= $r['id'] == $container['room_id'] ? 'selected' : '' ?>>
+                    <?= e($r['name']) ?>
+                </option>
+                <?php endforeach ?>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Name</label>
+            <input type="text" name="name" class="form-control" required
+                   value="<?= e($container['name']) ?>">
+        </div>
+        <div class="form-group">
+            <label>Type</label>
+            <select name="type" class="form-control">
+                <?php foreach (['fridge','freezer','shelf','cabinet','drawer','basket','other'] as $t): ?>
+                <option value="<?= $t ?>" <?= $container['type'] === $t ? 'selected' : '' ?>><?= ucfirst($t) ?></option>
+                <?php endforeach ?>
+            </select>
+        </div>
+        <div style="margin-bottom:16px;">
+            <a href="<?= APP_URL ?>/containers/<?= $container['id'] ?>/qr" class="btn-outline" style="font-size:.82rem;padding:8px 14px;text-decoration:none;display:inline-block;">
+                <i class="bi bi-qr-code"></i> QR Code
+            </a>
+        </div>
+        <button type="submit" class="btn-accent">Save</button>
+    </form>
 </div>
 
 <form method="POST" action="<?= APP_URL ?>/containers/<?= $container['id'] ?>/delete"
       onsubmit="return confirm('Delete this container and all its inventory entries?')">
-    <button class="btn btn-outline-danger w-100 mt-3">Delete Container</button>
+    <button type="submit" style="width:100%;padding:13px;background:none;border:1.5px solid var(--danger);border-radius:var(--r);color:var(--danger);font-weight:700;font-size:.9rem;cursor:pointer;">
+        <i class="bi bi-trash"></i> Delete Container
+    </button>
 </form>

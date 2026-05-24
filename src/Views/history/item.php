@@ -1,62 +1,54 @@
-<div class="d-flex align-items-center gap-2 mb-3">
-    <a href="<?= APP_URL ?>/history" class="btn btn-sm btn-outline-secondary"><i class="bi bi-arrow-left"></i></a>
-    <h5 class="fw-bold mb-0"><?= e($item['name']) ?></h5>
+<div class="page-head">
+    <a href="<?= APP_URL ?>/history" class="back-btn"><i class="bi bi-arrow-left"></i></a>
+    <h1><?= e($item['name']) ?></h1>
 </div>
 
-<!-- Current stock summary -->
-<div class="card shadow-sm mb-3">
-    <div class="card-body py-2">
-        <div class="text-muted small fw-semibold mb-2">Current stock</div>
-        <?php if (empty($stock)): ?>
-        <p class="text-muted small mb-0">None in stock.</p>
-        <?php else: ?>
-        <?php foreach ($stock as $s): ?>
-        <div class="d-flex justify-content-between small border-bottom py-1">
-            <span><?= e($s['room_name']) ?><?= $s['container_name'] ? ' / ' . e($s['container_name']) : '' ?></span>
-            <span class="fw-semibold <?= expiryStatus($s['expiry_date']) === 'expired' ? 'text-danger' : '' ?>">
-                <?= formatWeight($s['quantity_grams']) ?>
-            </span>
-        </div>
-        <?php endforeach ?>
-        <div class="d-flex justify-content-between small pt-1 fw-bold">
-            <span>Total</span>
-            <span><?= formatWeight(array_sum(array_column($stock, 'quantity_grams'))) ?></span>
-        </div>
-        <?php endif ?>
+<!-- Current stock -->
+<div class="card" style="padding:16px;margin-bottom:12px;">
+    <div style="font-size:.78rem;color:var(--text-3);font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;">Current Stock</div>
+    <?php if (empty($stock)): ?>
+    <p style="color:var(--text-2);font-size:.85rem;margin:0;">None in stock.</p>
+    <?php else: ?>
+    <?php foreach ($stock as $s): ?>
+    <div style="display:flex;justify-content:space-between;font-size:.85rem;padding:5px 0;border-bottom:1px solid var(--border-s);">
+        <span style="color:var(--text-2);"><?= e($s['room_name']) ?><?= $s['container_name'] ? ' / ' . e($s['container_name']) : '' ?></span>
+        <span style="font-weight:700;<?= expiryStatus($s['expiry_date']) === 'expired' ? 'color:var(--danger)' : '' ?>">
+            <?= formatWeight($s['quantity_grams']) ?>
+        </span>
     </div>
+    <?php endforeach ?>
+    <div style="display:flex;justify-content:space-between;font-size:.85rem;padding:6px 0 0;font-weight:800;">
+        <span>Total</span>
+        <span style="color:var(--accent);"><?= formatWeight(array_sum(array_column($stock, 'quantity_grams'))) ?></span>
+    </div>
+    <?php endif ?>
 </div>
 
-<!-- Consumption stats -->
-<div class="card shadow-sm mb-3">
-    <div class="card-body py-2">
-        <div class="text-muted small fw-semibold mb-2">All-time consumed</div>
-        <div class="fs-4 fw-bold text-success"><?= formatWeight($totalConsumed) ?></div>
-        <div class="text-muted small"><?= count($log) ?> usage event<?= count($log) !== 1 ? 's' : '' ?></div>
-    </div>
+<!-- All-time stats -->
+<div class="card" style="padding:16px;margin-bottom:12px;">
+    <div style="font-size:.78rem;color:var(--text-3);font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;">All-time consumed</div>
+    <div style="font-size:2rem;font-weight:900;color:var(--accent);"><?= formatWeight($totalConsumed) ?></div>
+    <div style="font-size:.82rem;color:var(--text-2);"><?= count($log) ?> usage event<?= count($log) !== 1 ? 's' : '' ?></div>
 </div>
 
 <!-- 30-day chart -->
-<div class="card shadow-sm mb-3">
-    <div class="card-body pb-2">
-        <div class="text-muted small fw-semibold mb-2">Last 30 days</div>
-        <canvas id="itemChart" height="120"></canvas>
-    </div>
+<div class="card" style="padding:16px;margin-bottom:16px;">
+    <div style="font-size:.78rem;color:var(--text-3);font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:12px;">Last 30 days</div>
+    <canvas id="itemChart" height="120"></canvas>
 </div>
 
 <!-- Usage log -->
-<h6 class="text-muted mb-2">Usage log</h6>
+<div class="sec-label" style="margin-bottom:8px;">Usage log</div>
 <?php if (empty($log)): ?>
-<div class="text-center py-4 text-muted small">No usage recorded yet.</div>
+<div class="empty-state"><i class="bi bi-clock-history"></i><p>No usage recorded yet.</p></div>
 <?php else: ?>
 <?php foreach ($log as $entry): ?>
-<div class="item-pill d-flex align-items-center gap-2 mb-2">
-    <div class="flex-grow-1">
-        <div class="small text-muted"><?= date('d M Y, H:i', strtotime($entry['consumed_at'])) ?></div>
-        <div class="fw-semibold"><?= formatWeight((int)$entry['quantity_grams']) ?></div>
-        <div class="text-muted small">
-            <?= e($entry['room_name'] ?? '') ?>
-            <?= $entry['container_name'] ? '/ ' . e($entry['container_name']) : '' ?>
-        </div>
+<div style="background:var(--card);border:1px solid var(--border-s);border-radius:var(--r-s);padding:12px 14px;margin-bottom:6px;">
+    <div style="font-size:.75rem;color:var(--text-3);margin-bottom:3px;"><?= date('d M Y, H:i', strtotime($entry['consumed_at'])) ?></div>
+    <div style="font-weight:700;"><?= formatWeight((int)$entry['quantity_grams']) ?></div>
+    <div style="font-size:.78rem;color:var(--text-2);margin-top:2px;">
+        <?= e($entry['room_name'] ?? '') ?>
+        <?= $entry['container_name'] ? '/ ' . e($entry['container_name']) : '' ?>
     </div>
 </div>
 <?php endforeach ?>
@@ -70,15 +62,18 @@ new Chart(document.getElementById('itemChart'), {
         labels: <?= json_encode($dailyLabels) ?>,
         datasets: [{
             data: <?= json_encode($dailyData) ?>,
-            backgroundColor: '#0d6efd',
-            borderRadius: 4,
+            backgroundColor: '#D97706',
+            borderRadius: 6,
         }]
     },
     options: {
         plugins: { legend: { display: false } },
         scales: {
-            y: { ticks: { callback: v => v >= 1000 ? (v/1000)+'kg' : v+'g' } },
-            x: { ticks: { font: { size: 9 } } }
+            y: {
+                ticks: { callback: v => v >= 1000 ? (v/1000)+'kg' : v+'g', font: { size: 10 } },
+                grid: { color: '#EDE5DA' }
+            },
+            x: { ticks: { font: { size: 9 } }, grid: { display: false } }
         }
     }
 });
