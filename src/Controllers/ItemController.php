@@ -27,8 +27,8 @@ class ItemController {
         $item = $item->fetch();
         if (!$item) { echo json_encode(['success' => false, 'error' => 'Not found']); return; }
 
-        // Prefer English name for better OFF search results
-        $term = !empty($item['name_en']) ? $item['name_en'] : $item['name'];
+        // Build the best search term for Open Food Facts
+        $term = $this->bestSearchTerm($item);
         $url  = 'https://world.openfoodfacts.org/cgi/search.pl?' . http_build_query([
             'search_terms'  => $term,
             'search_simple' => 1,
@@ -53,6 +53,28 @@ class ItemController {
 
         db()->prepare('UPDATE items SET image_url = ? WHERE id = ?')->execute([$imageUrl, $id]);
         echo json_encode(['success' => true, 'image_url' => $imageUrl]);
+    }
+
+    private function bestSearchTerm(array $item): string {
+        $en   = trim($item['name_en'] ?? '');
+        $name = trim($item['name']);
+
+        // If no English name, use the stored name as-is
+        if (!$en) return $name;
+
+        // "Pigeon Pea / Toor Dal" → prefer the part after "/" (usually more common)
+        // "Chickpea Flour / Gram Flour" → same logic
+        if (str_contains($en, '/')) {
+            $parts = array_map('trim', explode('/', $en));
+            // Pick the shortest part — tends to be the more common single-word name
+            usort($parts, fn($a, $b) => strlen($a) <=> strlen($b));
+            return $parts[0];
+        }
+
+        // Strip parenthetical notes: "Groundnut Oil (Peanut Oil)" → "Groundnut Oil"
+        $en = preg_replace('/\s*\(.*?\)/', '', $en);
+
+        return $en ?: $name;
     }
 
     public function lookup(): void {
