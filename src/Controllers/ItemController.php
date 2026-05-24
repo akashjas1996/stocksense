@@ -77,6 +77,40 @@ class ItemController {
         return $en ?: $name;
     }
 
+    public function editForm(string $id): void {
+        requireLogin();
+        $item = db()->prepare('SELECT * FROM items WHERE id = ?');
+        $item->execute([$id]);
+        $item = $item->fetch();
+        if (!$item) { http_response_code(404); exit('Item not found.'); }
+
+        $pageTitle = 'Edit ' . $item['name'];
+        ob_start(); require __DIR__ . '/../Views/items/edit.php';
+        $content = ob_get_clean();
+        require __DIR__ . '/../Views/layouts/app.php';
+    }
+
+    public function update(string $id): void {
+        requireLogin();
+        $item = db()->prepare('SELECT id FROM items WHERE id = ?');
+        $item->execute([$id]);
+        if (!$item->fetch()) { http_response_code(404); exit('Item not found.'); }
+
+        $name     = trim($_POST['name']     ?? '');
+        $nameEn   = trim($_POST['name_en']  ?? '') ?: null;
+        $nameHi   = trim($_POST['name_hi']  ?? '') ?: null;
+        $imageUrl = trim($_POST['image_url'] ?? '') ?: null;
+
+        if (!$name) { flash('error', 'Name is required.'); redirect("/items/{$id}/edit"); }
+
+        db()->prepare('
+            UPDATE items SET name = ?, name_en = ?, name_hi = ?, image_url = ? WHERE id = ?
+        ')->execute([$name, $nameEn, $nameHi, $imageUrl, $id]);
+
+        flash('success', 'Item updated.');
+        redirect('/items');
+    }
+
     public function lookup(): void {
         header('Content-Type: application/json');
         $name = trim($_GET['name'] ?? '');

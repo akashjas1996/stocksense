@@ -27,7 +27,7 @@
 <!-- Grid -->
 <div class="catalog-grid" id="catalog-grid">
     <?php foreach ($items as $item): ?>
-    <div class="catalog-card" id="card-<?= $item['id'] ?>" <?= empty($item['image_url']) ? 'data-no-image="1"' : '' ?> data-id="<?= $item['id'] ?>">
+    <a href="<?= APP_URL ?>/items/<?= $item['id'] ?>/edit" class="catalog-card" id="card-<?= $item['id'] ?>" <?= empty($item['image_url']) ? 'data-no-image="1"' : '' ?> data-id="<?= $item['id'] ?>" style="text-decoration:none;">
         <div class="catalog-img" id="img-<?= $item['id'] ?>">
             <?php if (!empty($item['image_url'])): ?>
             <img src="<?= e($item['image_url']) ?>" alt="" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
@@ -41,7 +41,7 @@
         <div class="catalog-sub"><?= e($item['name_en']) ?></div>
         <?php endif ?>
         <button class="catalog-fetch-btn" id="btn-<?= $item['id'] ?>"
-                onclick="fetchOne(<?= $item['id'] ?>, this)"
+                onclick="event.preventDefault();fetchOne(<?= $item['id'] ?>, this)"
                 title="<?= empty($item['image_url']) ? 'Fetch image' : 'Re-fetch image' ?>">
             <?php if (empty($item['image_url'])): ?>
             <i class="bi bi-image"></i>
@@ -49,7 +49,7 @@
             <i class="bi bi-arrow-clockwise" style="opacity:.45;font-size:.75rem;"></i>
             <?php endif ?>
         </button>
-    </div>
+    </a>
     <?php endforeach ?>
 </div>
 
