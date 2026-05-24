@@ -34,9 +34,10 @@ $routes = [
         '/scan'                   => 'ScanController@index',
         '/scan/location'          => 'ScanController@location',
         '/scan/product'           => 'ScanController@product',
-        '/location/([a-f0-9-]+)'  => 'LocationController@show',   // public QR landing
+        '/location/([a-f0-9-]+)'  => 'LocationController@show',
         '/history'                => 'HistoryController@index',
         '/history/item/(\d+)'     => 'HistoryController@item',
+        '/search'                 => 'SearchController@index',
     ],
     'POST' => [
         '/auth/login'             => 'AuthController@login',
