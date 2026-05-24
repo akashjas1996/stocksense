@@ -14,7 +14,7 @@
     <meta name="apple-mobile-web-app-title" content="StockSense">
     <link rel="apple-touch-icon" href="<?= APP_URL ?>/icons/apple-touch-icon.png">
 </head>
-<body>
+<body class="<?= e($bodyClass ?? '') ?>">
 
 <!-- Top nav -->
 <nav class="top-nav">
@@ -65,11 +65,11 @@
     <a href="<?= APP_URL ?>/scan"    class="<?= str_contains($cur, '/scan') ? 'active' : '' ?>">
         <i class="bi bi-upc-scan"></i>Scan
     </a>
+    <a href="<?= APP_URL ?>/ask" class="<?= str_contains($cur, '/ask') ? 'active' : '' ?>">
+        <i class="bi bi-stars"></i>Ask AI
+    </a>
     <a href="<?= APP_URL ?>/history" class="<?= str_contains($cur, '/history') ? 'active' : '' ?>">
         <i class="bi bi-graph-up"></i>History
-    </a>
-    <a href="<?= APP_URL ?>/inventory/create" class="<?= str_contains($cur, '/inventory/create') ? 'active' : '' ?>">
-        <i class="bi bi-plus-circle-fill"></i>Add
     </a>
 </nav>
 

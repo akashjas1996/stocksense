@@ -42,6 +42,7 @@ $routes = [
         '/items'                  => 'ItemController@index',
         '/items/lookup'           => 'ItemController@lookup',
         '/items/(\d+)/edit'       => 'ItemController@editForm',
+        '/ask'                    => 'AskController@index',
     ],
     'POST' => [
         '/auth/login'             => 'AuthController@login',
@@ -58,6 +59,8 @@ $routes = [
         '/inventory/(\d+)/consume'=> 'InventoryController@consume',
         '/items/(\d+)/fetch-image'=> 'ItemController@fetchImage',
         '/items/(\d+)/update'     => 'ItemController@update',
+        '/ask/query'              => 'AskController@query',
+        '/ask/clear'              => 'AskController@clearHistory',
     ],
 ];
 

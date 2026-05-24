@@ -11,3 +11,6 @@ define('APP_URL',  'https://yourdomain.com');
 
 define('SESSION_LIFETIME', 60 * 60 * 24 * 7);
 define('EXPIRY_WARN_DAYS', 7);
+
+// AI chat — get a free key at https://aistudio.google.com/app/apikey
+define('GEMINI_API_KEY', '');
