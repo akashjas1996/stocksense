@@ -24,8 +24,12 @@
 
         <div class="form-group">
             <label>Item Name</label>
-            <input type="text" name="item_name" id="item-name" class="form-control"
-                   value="<?= e($preItemName) ?>" placeholder="e.g. Aata, Basmati Rice" required autofocus list="items-list">
+            <div style="display:flex;gap:10px;align-items:flex-start;">
+                <div id="item-preview" style="width:52px;height:52px;border-radius:12px;background:var(--accent-l);border:1.5px solid var(--border-s);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.6rem;overflow:hidden;"></div>
+                <input type="text" name="item_name" id="item-name" class="form-control"
+                       value="<?= e($preItemName) ?>" placeholder="e.g. Aata, Basmati Rice" required autofocus list="items-list"
+                       style="flex:1;">
+            </div>
             <datalist id="items-list">
                 <?php foreach ($items as $it): ?>
                 <option value="<?= e($it['name']) ?>">
@@ -98,6 +102,26 @@ function filterContainers(roomId) {
 document.addEventListener('DOMContentLoaded', () => {
     const roomSel = document.getElementById('room-select');
     if (roomSel.value) filterContainers(roomSel.value);
+});
+
+// Item image preview on name input
+let lookupTimer;
+document.getElementById('item-name').addEventListener('input', function() {
+    clearTimeout(lookupTimer);
+    const v = this.value.trim();
+    if (v.length < 2) { document.getElementById('item-preview').innerHTML = ''; return; }
+    lookupTimer = setTimeout(() => {
+        fetch(`<?= APP_URL ?>/items/lookup?name=${encodeURIComponent(v)}`)
+            .then(r => r.json())
+            .then(data => {
+                const el = document.getElementById('item-preview');
+                if (data && data.image_url) {
+                    el.innerHTML = `<img src="${data.image_url}" style="width:100%;height:100%;object-fit:cover;">`;
+                } else {
+                    el.innerHTML = '';
+                }
+            }).catch(() => {});
+    }, 400);
 });
 
 let productScanner = null;

@@ -22,6 +22,9 @@
         </button>
         <div id="user-menu" style="display:none;position:absolute;right:0;top:44px;background:var(--card);border:1.5px solid var(--border);border-radius:var(--r-s);padding:8px;min-width:160px;box-shadow:var(--shadow-l);z-index:300;">
             <div style="padding:6px 10px;font-size:.8rem;color:var(--text-3);font-weight:700;"><?= e(currentUser()['name']) ?></div>
+            <a href="<?= APP_URL ?>/items" style="display:block;padding:8px 10px;font-size:.85rem;font-weight:700;color:var(--text);text-decoration:none;border-radius:6px;"><i class="bi bi-grid-3x3-gap" style="margin-right:6px;"></i>Item Catalog</a>
+            <a href="<?= APP_URL ?>/rooms" style="display:block;padding:8px 10px;font-size:.85rem;font-weight:700;color:var(--text);text-decoration:none;border-radius:6px;"><i class="bi bi-door-open" style="margin-right:6px;"></i>Manage Rooms</a>
+            <div style="height:1px;background:var(--border);margin:4px 0;"></div>
             <a href="<?= APP_URL ?>/auth/logout" style="display:block;padding:8px 10px;font-size:.85rem;font-weight:700;color:var(--danger);text-decoration:none;border-radius:6px;">Sign out</a>
         </div>
     </div>
