@@ -25,7 +25,7 @@ class ContainerController {
 
         $stmt = db()->prepare('INSERT INTO containers (room_id, name, type, qr_code) VALUES (?, ?, ?, ?)');
         $stmt->execute([$roomId, $name, $type, generateUuid()]);
-        flash('success', "Container "{$name}" created.");
+        flash('success', "Container '{$name}' created.");
         redirect("/rooms/{$roomId}");
     }
 

@@ -34,7 +34,7 @@ class RoomController {
 
         $stmt = db()->prepare('INSERT INTO rooms (name, qr_code) VALUES (?, ?)');
         $stmt->execute([$name, generateUuid()]);
-        flash('success', "Room "{$name}" created.");
+        flash('success', "Room '{$name}' created.");
         redirect('/rooms');
     }
 
