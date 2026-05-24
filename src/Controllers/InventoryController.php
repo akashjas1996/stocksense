@@ -115,10 +115,23 @@ class InventoryController {
 
         $newQty = $entry['quantity_grams'] - $use;
 
+        // Fetch context for denormalized log (survives inventory deletion)
+        $item = db()->prepare('SELECT name FROM items WHERE id = ?');
+        $item->execute([$entry['item_id']]); $item = $item->fetch();
+        $room = db()->prepare('SELECT name FROM rooms WHERE id = ?');
+        $room->execute([$entry['room_id']]); $room = $room->fetch();
+        $containerName = null;
+        if ($entry['container_id']) {
+            $con = db()->prepare('SELECT name FROM containers WHERE id = ?');
+            $con->execute([$entry['container_id']]); $con = $con->fetch();
+            $containerName = $con['name'] ?? null;
+        }
+
         db()->prepare('
-            INSERT INTO consumption_log (inventory_id, user_id, quantity_grams)
-            VALUES (?, ?, ?)
-        ')->execute([$id, $_SESSION['user_id'], $use]);
+            INSERT INTO consumption_log
+                (inventory_id, item_id, item_name, room_name, container_name, user_id, quantity_grams)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        ')->execute([$id, $entry['item_id'], $item['name'], $room['name'], $containerName, $_SESSION['user_id'], $use]);
 
         if ($newQty === 0) {
             db()->prepare('DELETE FROM inventory WHERE id = ?')->execute([$id]);

@@ -93,7 +93,7 @@ class ContainerController {
     public function qr(string $id): void {
         requireLogin();
         $container = $this->findOr404($id);
-        $qrPayload = APP_URL . '/scan/location?qr=' . urlencode($container['qr_code']);
+        $qrPayload = APP_URL . '/location/' . $container['qr_code'];
         $pageTitle  = 'QR — ' . e($container['name']);
         ob_start(); require __DIR__ . '/../Views/containers/qr.php';
         $content = ob_get_clean();

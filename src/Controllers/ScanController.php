@@ -15,24 +15,12 @@ class ScanController {
      * ?qr=UUID → resolves to room or container and redirects.
      */
     public function location(): void {
-        requireLogin();
         $qr = trim($_GET['qr'] ?? '');
         if (!$qr) redirect('/scan');
 
-        // Check rooms
-        $stmt = db()->prepare('SELECT id FROM rooms WHERE qr_code = ?');
-        $stmt->execute([$qr]);
-        $room = $stmt->fetch();
-        if ($room) redirect("/rooms/{$room['id']}");
-
-        // Check containers
-        $stmt = db()->prepare('SELECT id FROM containers WHERE qr_code = ?');
-        $stmt->execute([$qr]);
-        $container = $stmt->fetch();
-        if ($container) redirect("/containers/{$container['id']}");
-
-        flash('error', 'QR code not recognised.');
-        redirect('/scan');
+        // Redirect to the public location landing page
+        header('Location: ' . APP_URL . '/location/' . urlencode($qr));
+        exit;
     }
 
     /**

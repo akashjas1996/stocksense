@@ -32,8 +32,11 @@ $routes = [
         '/inventory/(\d+)/edit'   => 'InventoryController@editForm',
         '/inventory/(\d+)/consume'=> 'InventoryController@consumeForm',
         '/scan'                   => 'ScanController@index',
-        '/scan/location'          => 'ScanController@location',   // ?qr=UUID
-        '/scan/product'           => 'ScanController@product',    // ?barcode=EAN
+        '/scan/location'          => 'ScanController@location',
+        '/scan/product'           => 'ScanController@product',
+        '/location/([a-f0-9-]+)'  => 'LocationController@show',   // public QR landing
+        '/history'                => 'HistoryController@index',
+        '/history/item/(\d+)'     => 'HistoryController@item',
     ],
     'POST' => [
         '/auth/login'             => 'AuthController@login',

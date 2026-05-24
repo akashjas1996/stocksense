@@ -102,7 +102,7 @@ class RoomController {
         requireLogin();
         $room = $this->findOr404($id);
         // The QR payload is the scan URL; JS on the scan page handles the redirect
-        $qrPayload = APP_URL . '/scan/location?qr=' . urlencode($room['qr_code']);
+        $qrPayload = APP_URL . '/location/' . $room['qr_code'];
         $pageTitle  = 'QR — ' . e($room['name']);
         ob_start(); require __DIR__ . '/../Views/rooms/qr.php';
         $content = ob_get_clean();

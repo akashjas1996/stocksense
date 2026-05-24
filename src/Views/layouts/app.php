@@ -64,6 +64,9 @@
         <a href="<?= APP_URL ?>/scan" class="nav-link text-light text-center small">
             <i class="bi bi-upc-scan d-block fs-5"></i>Scan
         </a>
+        <a href="<?= APP_URL ?>/history" class="nav-link text-light text-center small">
+            <i class="bi bi-graph-up d-block fs-5"></i>History
+        </a>
         <a href="<?= APP_URL ?>/inventory/create" class="nav-link text-light text-center small">
             <i class="bi bi-plus-circle-fill d-block fs-5"></i>Add
         </a>
