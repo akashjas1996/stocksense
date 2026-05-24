@@ -59,17 +59,10 @@ class AskController {
             'generationConfig' => ['temperature' => 0.7, 'maxOutputTokens' => 1024],
         ]);
 
-        $url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' . GEMINI_API_KEY;
-        $ctx = stream_context_create(['http' => [
-            'method'  => 'POST',
-            'header'  => "Content-Type: application/json\r\nContent-Length: " . strlen($body),
-            'content' => $body,
-            'timeout' => 20,
-        ]]);
-
-        $resp = @file_get_contents($url, false, $ctx);
+        $url  = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' . GEMINI_API_KEY;
+        $resp = $this->curlPost($url, $body);
         if ($resp === false) {
-            echo json_encode(['error' => 'Could not reach AI service. Check your internet connection.']); return;
+            echo json_encode(['error' => 'Could not reach the AI service. Ensure the server can make outbound HTTPS requests (cURL).']); return;
         }
 
         $data   = json_decode($resp, true);
@@ -92,6 +85,22 @@ class AskController {
         requireLogin();
         $_SESSION['ask_history'] = [];
         redirect('/ask');
+    }
+
+    private function curlPost(string $url, string $body): string|false {
+        if (!function_exists('curl_init')) return false;
+        $ch = curl_init($url);
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POST           => true,
+            CURLOPT_POSTFIELDS     => $body,
+            CURLOPT_HTTPHEADER     => ['Content-Type: application/json'],
+            CURLOPT_TIMEOUT        => 20,
+            CURLOPT_SSL_VERIFYPEER => true,
+        ]);
+        $resp = curl_exec($ch);
+        curl_close($ch);
+        return $resp;
     }
 
     private function buildInventoryContext(): string {
