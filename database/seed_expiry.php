@@ -13,9 +13,10 @@
  * - Sugar: indefinite, but 3 years is practical
  */
 
+require_once __DIR__ . '/../config/config.php';
 $pdo = new PDO(
-    'mysql:host=DB_HOST_REDACTED;dbname=DB_NAME_REDACTED;charset=utf8mb4',
-    'DB_NAME_REDACTED', 'DB_PASS_REDACTED',
+    'mysql:host=' . DB_HOST . ';dbname=' . DB_NAME . ';charset=utf8mb4',
+    DB_USER, DB_PASS,
     [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
 );
 

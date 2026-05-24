@@ -1,7 +1,10 @@
 <?php
-$pdo = new PDO('mysql:host=DB_HOST_REDACTED;dbname=DB_NAME_REDACTED;charset=utf8mb4',
-    'DB_NAME_REDACTED', 'DB_PASS_REDACTED',
-    [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+require_once __DIR__ . '/../config/config.php';
+$pdo = new PDO(
+    'mysql:host=' . DB_HOST . ';dbname=' . DB_NAME . ';charset=utf8mb4',
+    DB_USER, DB_PASS,
+    [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
+);
 
 // [id => [name_en, name_hi]]
 // name_hi = common Hinglish spellings / alternate names (space-separated so all match in LIKE search)
