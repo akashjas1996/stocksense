@@ -1,0 +1,29 @@
+/* Expiry badges */
+.badge-expired       { background: #dc3545; color: #fff; }
+.badge-expiring-soon { background: #fd7e14; color: #fff; }
+.badge-ok            { background: #198754; color: #fff; }
+
+/* Room / container cards */
+.location-card {
+    border-radius: 12px;
+    transition: box-shadow .15s;
+    cursor: pointer;
+}
+.location-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.12); }
+
+/* Item row pill */
+.item-pill {
+    border-radius: 8px;
+    background: #fff;
+    border: 1px solid #dee2e6;
+    padding: .5rem .75rem;
+}
+
+/* Scan viewfinder */
+#qr-reader {
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+/* Make bottom-nav icons readable on mobile */
+.navbar.fixed-bottom .nav-link { padding: .25rem .5rem; }
