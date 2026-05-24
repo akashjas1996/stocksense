@@ -13,10 +13,13 @@ class SearchController {
         }
 
         // Find all inventory entries matching the query, grouped by item
+        $like = '%' . $q . '%';
         $stmt = db()->prepare('
             SELECT
                 it.id         AS item_id,
                 it.name       AS item_name,
+                it.name_en    AS item_name_en,
+                it.name_hi    AS item_name_hi,
                 inv.id        AS inv_id,
                 inv.quantity_grams,
                 inv.expiry_date,
@@ -29,11 +32,13 @@ class SearchController {
             JOIN items it      ON it.id  = inv.item_id
             JOIN rooms r       ON r.id   = inv.room_id
             LEFT JOIN containers c ON c.id = inv.container_id
-            WHERE it.name LIKE ?
+            WHERE it.name    LIKE ?
+               OR it.name_en LIKE ?
+               OR it.name_hi LIKE ?
             ORDER BY it.name ASC, r.name ASC, c.name ASC
             LIMIT 60
         ');
-        $stmt->execute(['%' . $q . '%']);
+        $stmt->execute([$like, $like, $like]);
         $rows = $stmt->fetchAll();
 
         // Group by item, collect all locations under it
@@ -42,10 +47,12 @@ class SearchController {
             $key = $row['item_id'];
             if (!isset($grouped[$key])) {
                 $grouped[$key] = [
-                    'item_id'   => $row['item_id'],
-                    'item_name' => $row['item_name'],
-                    'total_grams' => 0,
-                    'locations' => [],
+                    'item_id'      => $row['item_id'],
+                    'item_name'    => $row['item_name'],
+                    'item_name_en' => $row['item_name_en'],
+                    'item_name_hi' => $row['item_name_hi'],
+                    'total_grams'  => 0,
+                    'locations'    => [],
                 ];
             }
             $grouped[$key]['total_grams'] += $row['quantity_grams'];

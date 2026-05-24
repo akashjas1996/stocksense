@@ -120,8 +120,11 @@ function renderResults(items, q) {
         const multi = item.locations.length > 1;
         html += `<div class="px-3 pt-3 pb-1">`;
         html += `<div class="d-flex justify-content-between align-items-baseline mb-1">
-            <span class="fw-bold">${highlight(item.item_name, q)}</span>
-            <span class="badge bg-dark ms-2">${item.formatted_total} total</span>
+            <div>
+                <span class="fw-bold">${highlight(item.item_name, q)}</span>
+                ${item.item_name_en ? `<span class="text-muted small ms-1">${highlight(item.item_name_en, q)}</span>` : ''}
+            </div>
+            <span class="badge bg-dark ms-2 text-nowrap">${item.formatted_total} total</span>
         </div>`;
 
         item.locations.forEach(loc => {
