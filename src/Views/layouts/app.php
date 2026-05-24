@@ -6,6 +6,13 @@
     <title><?= e($pageTitle ?? APP_NAME) ?> — <?= APP_NAME ?></title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="<?= APP_URL ?>/css/app.css">
+    <!-- PWA -->
+    <link rel="manifest" href="<?= APP_URL ?>/manifest.php">
+    <meta name="theme-color" content="#D97706">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="StockSense">
+    <link rel="apple-touch-icon" href="<?= APP_URL ?>/icons/apple-touch-icon.png">
 </head>
 <body>
 
