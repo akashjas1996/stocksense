@@ -590,6 +590,30 @@ body.ask-page {
 .chat-send-btn:active { transform: scale(.93); }
 .chat-send-btn:disabled { background: var(--border); cursor: not-allowed; }
 
+.action-card {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 14px; border-radius: var(--r-s);
+    font-size: .83rem; font-weight: 700; max-width: 88%;
+    align-self: flex-start;
+}
+.action-card.success {
+    background: var(--good-l); color: var(--good);
+    border: 1.5px solid #BBF7D0;
+}
+.action-card.error {
+    background: var(--danger-l); color: var(--danger);
+    border: 1.5px solid #FECACA;
+}
+.action-card i { font-size: 1rem; flex-shrink: 0; }
+.action-card span { flex: 1; font-weight: 500; }
+.action-card strong { font-weight: 800; }
+.action-card-link {
+    font-size: .75rem; font-weight: 800; color: var(--good);
+    text-decoration: none; white-space: nowrap; flex-shrink: 0;
+    display: flex; align-items: center; gap: 3px;
+}
+.action-card-link:hover { text-decoration: underline; }
+
 /* ── Item Catalog ─────────────────────────────────── */
 .catalog-grid {
     display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;

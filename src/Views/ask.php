@@ -127,6 +127,7 @@ async function sendMessage() {
         const data = await res.json();
         setTyping(false);
         appendMsg('ai', data.error ? '⚠️ ' + data.error : data.answer);
+        if (data.action) showActionCard(data.action);
     } catch {
         setTyping(false);
         appendMsg('ai', '⚠️ Network error. Please try again.');
@@ -134,6 +135,24 @@ async function sendMessage() {
 
     btn.disabled = false;
     input.focus();
+}
+
+function showActionCard(action) {
+    const card = document.createElement('div');
+    card.className = 'action-card ' + (action.status === 'success' ? 'success' : 'error');
+    if (action.status === 'success') {
+        const expiry = action.expiry ? ` · Expires ${action.expiry}` : '';
+        card.innerHTML =
+            `<i class="bi bi-check-circle-fill"></i>` +
+            `<span>Added <strong>${esc(action.item)}</strong> — ${esc(action.qty)} in ${esc(action.location)}${esc(expiry)}</span>` +
+            `<a href="${APP_URL}/explore" class="action-card-link">View <i class="bi bi-arrow-right"></i></a>`;
+    } else {
+        card.innerHTML =
+            `<i class="bi bi-exclamation-triangle-fill"></i>` +
+            `<span>Couldn't save: ${esc(action.message)}</span>`;
+    }
+    msgs.insertBefore(card, typing);
+    requestAnimationFrame(() => card.scrollIntoView({ behavior: 'smooth', block: 'end' }));
 }
 
 function fillAndSend(q) {
