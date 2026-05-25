@@ -43,6 +43,7 @@ $routes = [
         '/items/lookup'           => 'ItemController@lookup',
         '/items/(\d+)/edit'       => 'ItemController@editForm',
         '/ask'                    => 'AskController@index',
+        '/ask/clear'              => 'AskController@clearHistory',
     ],
     'POST' => [
         '/auth/login'             => 'AuthController@login',
