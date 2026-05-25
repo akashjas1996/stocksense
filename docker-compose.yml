@@ -1,0 +1,40 @@
+version: "3.9"
+
+services:
+
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      DB_HOST: db
+      DB_NAME: stocksense
+      DB_USER: stocksense
+      DB_PASS: secret
+      APP_NAME: StockSense
+      APP_URL: http://localhost:8080
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}   # export GEMINI_API_KEY=... before running
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE:      stocksense
+      MYSQL_USER:          stocksense
+      MYSQL_PASSWORD:      secret
+      MYSQL_ROOT_PASSWORD: rootsecret
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "stocksense", "-psecret"]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+    restart: unless-stopped
+
+volumes:
+  db_data:
