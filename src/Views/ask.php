@@ -54,31 +54,29 @@ function esc(s) {
 }
 
 function md(raw) {
+    // Apply inline bold/italic to already-escaped text
+    function fmt(t) {
+        t = t.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        t = t.replace(/\*([^*\n]+?)\*/g, '<em>$1</em>');
+        return t;
+    }
     const lines = raw.split('\n');
     const out   = [];
     let inList  = false;
-
     for (let line of lines) {
-        // Bold **text** / __text__
-        line = line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-        line = line.replace(/__(.*?)__/g,     '<strong>$1</strong>');
-        // Italic *text*
-        line = line.replace(/\*(.*?)\*/g, '<em>$1</em>');
-        // Headers → just bold
-        if (/^#{1,3} /.test(line)) {
-            if (inList) { out.push('</ul>'); inList = false; }
-            out.push('<strong>' + esc(line.replace(/^#{1,3} /, '')) + '</strong>');
-            continue;
-        }
-        // Bullet / numbered list
-        const bullet = line.match(/^[-*•] (.+)/);
+        line = esc(line); // escape HTML entities BEFORE any substitution
+        const hdr    = line.match(/^#{1,3} (.+)/);
+        const bullet = line.match(/^[-•*] (.+)/);
         const num    = line.match(/^\d+\. (.+)/);
-        if (bullet || num) {
+        if (hdr) {
+            if (inList) { out.push('</ul>'); inList = false; }
+            out.push('<strong>' + fmt(hdr[1]) + '</strong>');
+        } else if (bullet || num) {
             if (!inList) { out.push('<ul>'); inList = true; }
-            out.push('<li>' + (bullet ? bullet[1] : num[1]) + '</li>');
+            out.push('<li>' + fmt(bullet ? bullet[1] : num[1]) + '</li>');
         } else {
             if (inList) { out.push('</ul>'); inList = false; }
-            if (line.trim()) out.push(esc(line) + '<br>');
+            if (line.trim()) out.push(fmt(line) + '<br>');
             else if (out.length) out.push('<br>');
         }
     }
